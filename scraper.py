@@ -35,6 +35,7 @@ def scrape_products(urls):
         'pluus': 'Apparel & Accessories > Clothing > Shirts & Tops',
         'aksessuaar': 'Apparel & Accessories > Accessories',
         'ehe': 'Apparel & Accessories > Jewelry',
+        'pleed': 'Apparel & Accessories > Accessories',
     }
 
     for url in urls:
