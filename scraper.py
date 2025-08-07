@@ -8,6 +8,23 @@ def scrape_products(urls):
     
     # Estonian to English keyword mapping for product categories
     category_map = {
+        'kimono': 'Apparel & Accessories > Clothing > Kimonos',
+        'mantel': 'Apparel & Accessories > Clothing > Coats',
+        'bomberjakk': 'Apparel & Accessories > Clothing > Coats',
+        'hommikumantel': 'Apparel & Accessories > Clothing > Bathrobes',
+        'rätik': 'Home & Garden > Linens & Bedding > Towels',
+        'kõrvarõngad': 'Apparel & Accessories > Accessories',
+        'kinkekaart': 'Media > Gifts & Cards > Gift Cards',
+        'patsikumm': 'Apparel & Accessories > Accessories',
+        'öömask': 'Apparel & Accessories > Accessories',
+        'retuusid': 'Apparel & Accessories > Clothing > Tights',
+        'pullover': 'Apparel & Accessories > Clothing > Sweaters',
+        'torusall': 'Apparel & Accessories > Accessories',
+        'kosmeetikakott': 'Apparel & Accessories > Accessories',
+        'müts': 'Apparel & Accessories > Accessories',
+        'sall': 'Apparel & Accessories > Accessories',
+        'bag': 'Apparel & Accessories > Accessories',
+        'kaisukas': 'Apparel & Accessories > Accessories',
         'kleit': 'Apparel & Accessories > Clothing > Dresses',
         'seelik': 'Apparel & Accessories > Clothing > Skirts',
         'pusa': 'Apparel & Accessories > Clothing > Shirts & Tops',
@@ -16,7 +33,6 @@ def scrape_products(urls):
         'jakid': 'Apparel & Accessories > Clothing > Outerwear',
         'särk': 'Apparel & Accessories > Clothing > Shirts & Tops',
         'pluus': 'Apparel & Accessories > Clothing > Shirts & Tops',
-        'mantel': 'Apparel & Accessories > Clothing > Outerwear',
         'aksessuaar': 'Apparel & Accessories > Accessories',
         'ehe': 'Apparel & Accessories > Jewelry',
     }
@@ -51,11 +67,14 @@ def scrape_products(urls):
             except (AttributeError, KeyError):
                 product_data['link'] = ''
 
-            # Extract title
+            # Extract title and use it for description
             try:
-                product_data['title'] = item.find('h2', class_='woocommerce-loop-product__title').text.strip()
+                title = item.find('h2', class_='woocommerce-loop-product__title').text.strip()
+                product_data['title'] = title
+                product_data['description'] = title
             except AttributeError:
                 product_data['title'] = ''
+                product_data['description'] = ''
 
             # Extract image link (main product image)
             try:
@@ -76,7 +95,6 @@ def scrape_products(urls):
             product_data['availability'] = 'in stock'
             product_data['condition'] = 'new'
             product_data['brand'] = 'haruu'
-            product_data['description'] = '' 
 
             # Determine product categories based on title keywords
             title_lower = product_data['title'].lower()
@@ -96,12 +114,12 @@ def save_to_csv(products):
     # Consolidate all headers from both images for maximum compatibility
     headers = [
         'id', 'title', 'description', 'availability', 'condition', 'price', 
-        'link', 'image_link', 'brand', 'google_product_category', 'fb_product_category', 'quantity_to_sell_on_facebook', 
-        'sale_price', 'sale_price_effective_date', 'item_group_id', 'gender', 'color', 
-        'size', 'age_group', 'material', 
-        'pattern', 'shipping', 'shipping_weight', 
-        'gtin', 'video[0].url', 'video[0].tag[0]', 
-        'product_tags[0]','product_tags[1]','style[0]'
+        'link', 'image_link', 'brand', 'product_type', 'age_group', 'color', 
+        'gender', 'item_group_id', 'pattern', 'size', 'shipping', 
+        'shipping_weight', 'custom_label_0', 'custom_label_1', 
+        'custom_label_2', 'custom_label_3', 'custom_label_4', 
+        'google_product_category', 'fb_product_category', 'product_tags[0]', 
+        'additional_image_link'
     ]
     
     with open('products.csv', 'w', newline='', encoding='utf-8') as csvfile:
